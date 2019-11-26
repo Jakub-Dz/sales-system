@@ -1,7 +1,8 @@
 # Sales System Project
 Test Project from MO, can be built in any language (.NET preferred).
+Trello board: https://trello.com/b/rt5U3gq3/sales-system
 
-## Requirements
+## Task description
 **The system must:**
 - Keep an inventory of stock items and their cost
 - Allow the customer to view the current quantity and cost of each item 
@@ -14,3 +15,5 @@ Test Project from MO, can be built in any language (.NET preferred).
 - Update the customer’s balance
 
 **Note: This sales system is for customer use, not company use.**
+
+## Implementation
