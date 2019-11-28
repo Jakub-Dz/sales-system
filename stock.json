@@ -1,38 +1,38 @@
 {
    "stock":[
       {
-         "item":"Armchair",
-         "cost":"214",
+         "name":"Armchair",
+         "price":"214",
          "quantity":"2"
       },
       {
-         "item":"Sofa",
-         "cost":"899.25",
+         "name":"Sofa",
+         "price":"899.25",
          "quantity":"1"
       },
       {
-         "item":"Kitchen Table",
-         "cost":"329",
+         "name":"Kitchen Table",
+         "price":"329",
          "quantity":"4"
       },
       {
-         "item":"Kitchen Chair",
-         "cost":"78.99",
+         "name":"Kitchen Chair",
+         "price":"78.99",
          "quantity":"16"
       },
       {
-         "item":"Bed",
-         "cost":"340.99",
+         "name":"Bed",
+         "price":"340.99",
          "quantity":"3"
       },
       {
-         "item":"Chest of Drawers",
-         "cost":"249",
+         "name":"Chest of Drawers",
+         "price":"249",
          "quantity":"7"
       },
       {
-         "item":"Bookcase",
-         "cost":"199",
+         "name":"Bookcase",
+         "price":"199",
          "quantity":"6"
       }
    ]
