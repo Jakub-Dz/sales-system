@@ -79,6 +79,8 @@ class Transaction:
 
 stock = Stock()
 basket = Basket()
+
+# Testing only
 basket.add_item("Sofa", 4)
 basket.add_item("Bed", 2)
 basket.display()
