@@ -48,19 +48,23 @@ class User:
         return self.wallet
 
 
-class Basket(Stock):  # Not sure if calling Stock is a good idea, as Stock methods will be callable in Basket
+class Basket:
 
     def __init__(self, value=0):
-        super().__init__()
         self.value = value
         self.items = {}
 
     def add_item(self, item_name, quantity):
-        self.items[item_name] = quantity
-        self.value += quantity * self.stock_dict[item_name]["price"]
+        self.items[item_name] = (quantity, quantity * stock.stock_dict[item_name]["price"])  # requires stock = Stock()
+        self.value += self.items[item_name][1]
 
     def remove_item(self, item_name):
+        self.value -= self.items[item_name][1]
         del self.items[item_name]
+
+    def display(self):
+        print(self.items)
+        print(f'Total basket value: {self.value:.2f}.')
 
 
 class Transaction:
@@ -73,8 +77,10 @@ class Transaction:
     # if self.stock_dict[item_name]["quantity"] - quantity >= 0:
 
 
-stock = Stock() # Must run
-stock.display()
+stock = Stock()
 basket = Basket()
-basket.add_item("Bed", 1)
+basket.add_item("Sofa", 4)
+basket.add_item("Bed", 2)
+basket.display()
 basket.remove_item("Bed")
+basket.display()
