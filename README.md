@@ -1,6 +1,8 @@
 # Sales System Project
 Test Project from MO, can be built in any language (.NET preferred).
 
+Link to the main Python file: **[sales_system.py](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.py)**
+
 Trello board: https://trello.com/b/rt5U3gq3/sales-system
 
 ## Task description
