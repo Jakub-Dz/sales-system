@@ -14,16 +14,12 @@ Public shSet1, shSet2, shOutput As Worksheet
 Public x_col, y_col, id_col, id1, id2 As String
 Public row_start, rows_set1, rows_set2, array_size, i, k, row_min_dist As Integer
 Public ix, iy, kx, ky, dist, min_dist As Double
-
-Sub MatchPointAssets()
-
-Application.ScreenUpdating = False ' To speed up the process
+Sub SetGlobalVars()
 
 ' Setting tabs/sheets address
 Set shSet1 = ThisWorkbook.Sheets("Set1")
 Set shSet2 = ThisWorkbook.Sheets("Set2")
 Set shOutput = ThisWorkbook.Sheets("Solution")
-
 
 ' Setting rows/columns address
 x_col = "A"
@@ -35,8 +31,18 @@ row_start = 2 '<-- First row with data (not headers)
 rows_set1 = shSet1.Range(x_col & "1048576").End(xlUp).Row
 rows_set2 = shSet2.Range(x_col & "1048576").End(xlUp).Row
 
-' Clear Output sheet
-Call ClearOutput
+End Sub
+Sub ClearOutput()
+
+Call SetGlobalVars
+shOutput.Range(x_col & row_start & ":" & id_col & "1048576").ClearContents
+
+End Sub
+Sub MatchPointAssets()
+
+Application.ScreenUpdating = False ' To speed up the process
+
+Call ClearOutput ' Clear Output sheet & set global variables
 
 ' Array/List size calcs - based on Set2 as allocating values from Set1 to Set2 -> Set2 is a 2nd tier loop
 array_size = rows_set2 - row_start
@@ -72,8 +78,4 @@ Next i
 Application.ScreenUpdating = True
 End Sub
 
-Sub ClearOutput()
 
-shOutput.Range(x_col & row_start & ":" & id_col & "1048576").ClearContents
-
-End Sub
