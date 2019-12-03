@@ -3,6 +3,9 @@ Test Project from MO, can be built in any language (.NET preferred).
 
 Link to the main Python file: **[sales_system.py](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.py)**
 
+GUI mock-up: **[WireFrame Online](https://wireframepro.mockflow.com/view/Mb007c13b48670f65df9aca01fa0e4e411575378753417)**
+
+
 Trello board: https://trello.com/b/rt5U3gq3/sales-system
 
 ## Task description
