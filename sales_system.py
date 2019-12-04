@@ -67,16 +67,32 @@ class Transaction:
     # if self.stock_dict[item_name]["quantity"] - quantity >= 0:
 
 
-class GUI:
+class SalesGUI:
+    def __init__(self, master):
+        self.master = master
+        master.title("Sales System")
+        window_size = "600x400"
+        window_xpos = int(root.winfo_screenwidth()/2 - root.winfo_reqwidth())
+        window_ypos = int(root.winfo_screenheight()/2 - root.winfo_reqheight())
 
-    def __init__(self, *args, **kwargs):
-        pass
+        master.geometry(f'{window_size}+{window_xpos}+{window_ypos}')
+
+        self.label = tk.Label(master, text="This is our first GUI!")
+        self.label.grid(column=0, row=0)
+
+        self.greet_button = tk.Button(master, text="    BUY    ", command=self.greet)
+        self.greet_button.grid(column=1, row=1)
+
+        self.close_button = tk.Button(master, text="CANCEL", command=master.quit)
+        self.close_button.grid(column=0, row=1)
+
+    def greet(self):
+        print("Greetings!")
 
 
 user = User("Basil Fawlty", 1087.65)  # Hardcoded values as per project's spec
 stock = Stock()
 basket = Basket()
-gui = GUI()  # https://stackoverflow.com/questions/17466561/best-way-to-structure-a-tkinter-application
 
 # Testing only
 print(f'Username: {user.name}\nFunds available: £{user.wallet:.2f}')
@@ -89,3 +105,7 @@ stock.remove("Bed", 1)
 print(f'Number of items in the basket: {len(basket.items)}\nTotal value: £{basket.value:.2f}')
 for item in stock.stock_dict:
     print(f'{item} | Price: £{stock.stock_dict[item]["price"]} | Qty: {stock.stock_dict[item]["quantity"]}')
+
+root = tk.Tk()
+my_gui = SalesGUI(root)
+root.mainloop()
