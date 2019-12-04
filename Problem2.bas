@@ -14,6 +14,8 @@ Public shSet1, shSet2, shOutput As Worksheet
 Public x_col, y_col, id_col, id1, id2 As String
 Public row_start, rows_set1, rows_set2, array_size, i, k, row_min_dist As Integer
 Public ix, iy, kx, ky, dist, min_dist As Double
+
+
 Sub SetGlobalVars()
 
 ' Setting tabs/sheets address
@@ -32,12 +34,16 @@ rows_set1 = shSet1.Range(x_col & "1048576").End(xlUp).Row
 rows_set2 = shSet2.Range(x_col & "1048576").End(xlUp).Row
 
 End Sub
+
+
 Sub ClearOutput()
 
 Call SetGlobalVars
 shOutput.Range(x_col & row_start & ":" & id_col & "1048576").ClearContents
 
 End Sub
+
+
 Sub MatchPointAssets()
 
 Application.ScreenUpdating = False ' To speed up the process
