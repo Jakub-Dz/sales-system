@@ -4,7 +4,7 @@ The company only has one customer.
 """
 import json
 import tkinter as tk
-from tkinter import messagebox, filedialog, END, StringVar, DISABLED, NORMAL  # messagebox needs to be imported separately
+from tkinter import messagebox, filedialog, END, StringVar, DISABLED, NORMAL, ACTIVE  # messagebox needs to be imported separately
 
 
 class Item:
@@ -24,8 +24,11 @@ class Stock:
     def remove(self, item_name, quantity):
         self.stock_dict[item_name]["quantity"] -= quantity
 
+    def add(self, item_name, quantity):
+        self.stock_dict[item_name]["quantity"] += quantity
+
     def save(self):
-        with open("stock.json", "w") as stock_file:
+        with open("stock_new.json", "w") as stock_file:
             json.dump(self.stock_dict, stock_file, indent=3)
 
 
@@ -58,7 +61,7 @@ class Basket:
 
         self.value += quantity * stock.stock_dict[item_name]["price"]
 
-    # Removing item by type completely, quantity edits not implemented
+    # Removing item by type completely, in-basket quantity edits not implemented
     def remove_item(self, item_name):
         self.value -= self.items[item_name][0]
         del self.items[item_name]
@@ -66,13 +69,26 @@ class Basket:
 
 class Transaction:
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
+        pass
+        self.user = user
 
     def user_details(self):
         pass
         # return self.user.user_name, self.user.wallet
     # if self.stock_dict[item_name]["quantity"] - quantity >= 0:
+
+    def add_to_basket(self, item_name):
+        if self.in_stock(item_name):
+            basket.add_item(item_name, 1)
+            stock.remove(item_name, 1)
+
+    def remove_from_basket(self, item_name, quantity):
+        basket.remove_item(item_name)
+        stock.add(item_name, quantity)
+
+    def in_stock(self, item_name):
+        return stock.stock_dict[item_name]["quantity"] > 0
 
 
 class SalesGUI:
@@ -89,23 +105,6 @@ class SalesGUI:
         master.geometry(f'{window_size}+{window_xpos}+{window_ypos}')
         master.configure(bg="gray95")
 
-        self.var = StringVar()
-        self.var.set(f'Basket value: £{basket.value}')
-
-        self.selected_item = None
-
-        # GUI List boxes
-        self.stock_control = []  # To access key/index for dict/list
-        self.items_lb = None
-        self.stock_listbox(stock.stock_dict)
-
-        self.basket_control = []  # To access key/index for dict/list
-        self.basket_lb = None
-        self.basket_listbox(basket.items)
-
-        self.user_lb = None
-        self.user_listbox(user.name, user.wallet)
-
         # GUI Labels
         self.user_label = tk.Label(master, text="User details:")
         self.user_label.place(x=180, y=0)
@@ -116,21 +115,37 @@ class SalesGUI:
         self.basket_top_label = tk.Label(master, text="Your basket:")
         self.basket_top_label.place(x=580, y=55)
 
-        self.basket_total_label = tk.Label(master, textvariable=self.var)
+        self.text_basket_total = StringVar()
+        self.text_basket_total.set(f'Basket value: £{basket.value}')
+        self.basket_total_label = tk.Label(master, textvariable=self.text_basket_total)
         self.basket_total_label.place(x=535, y=285)
 
         # GUI Buttons
         self.remove_button = tk.Button(master, text="Remove Item", command=self.remove)
-        self.remove_button.config(width=25, height=1, bg="red")
+        self.remove_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.remove_button.place(x=520, y=320)
 
         self.checkout_button = tk.Button(master, text="CHECKOUT", command=self.test)
-        self.checkout_button.config(width=25, height=1, bg="lightblue")
+        self.checkout_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.checkout_button.place(x=520, y=15)
 
         self.add_button = tk.Button(master, text="Add to basket", command=self.add)
-        self.add_button.config(width=25, height=1, bg="palegreen")
+        self.add_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.add_button.place(x=135, y=320)
+
+        # GUI List boxes
+        self.selected_item = None
+
+        self.stock_control = []  # To access key/index for dict/list
+        self.items_lb = None
+        self.stock_listbox(stock.stock_dict)
+
+        self.basket_control = []  # To access key/index for dict/list
+        self.basket_lb = None
+        self.basket_listbox(basket.items)
+
+        self.user_lb = None
+        self.user_listbox(user.name, user.wallet)
 
         #  listbox https://stackoverflow.com/questions/15672552/python-tkinter-listbox-get-active-method
         #  http://zetcode.com/tkinter/widgets/
@@ -149,8 +164,11 @@ class SalesGUI:
         self.user_lb.config(width=49, height=1)
         self.user_lb.place(x=40, y=25)
 
+        self.user_lb.bindtags((self.user_lb, self.master, "all"))  # disable LB selection
+
     def stock_listbox(self, items_dict):
         self.items_lb = tk.Listbox(self.master)
+        self.stock_control = []
 
         for item in items_dict:
             text_item = f'{item:16}'
@@ -167,41 +185,64 @@ class SalesGUI:
 
     def basket_listbox(self, basket_list):
         self.basket_lb = tk.Listbox(self.master)
+        self.basket_control = []
 
         for item in basket_list:
 
             text_item = f'{item[:11]:11}'
-            text_price = f'£{basket_list[item][0]:<6}'
+            text_price = f'£{basket_list[item][0]:.2f}'
             text_qty = f'{basket_list[item][1]}'
-            self.basket_lb.insert(END, f'{text_item} | {text_price} | {text_qty}')
+            self.basket_lb.insert(END, f'{text_item} | {text_price:<8} | {text_qty}')
 
             self.basket_control.append(item)
+            print(self.basket_control)
+            print(item)
 
         self.basket_lb.bind("<<ListboxSelect>>", self.basket_select)
-        self.basket_lb.config(width=26)
+        self.basket_lb.config(width=27)
         self.basket_lb.place(x=520, y=80)
+
+        if self.basket_control:
+            self.checkout_button.config(width=25, height=1, bg="lightblue", state=NORMAL)
+        else:
+            self.checkout_button.config(width=25, height=1, bg="gray", state=DISABLED)
 
     def stock_select(self, val):
         sender = val.widget
         idx = sender.curselection()
-        print("stock", idx)
-        self.selected_item = self.stock_control[(idx[0])]
+        self.selected_item = None
+
+        # check if listbox is contains elements
+        if idx:
+            self.selected_item = self.stock_control[(idx[0])]
+            self.remove_button.config(bg="gray", state=DISABLED)
+            self.add_button.config(bg="palegreen", state=NORMAL)
+            print(self.selected_item)
+
+            if not transaction.in_stock(self.selected_item):
+                self.add_button.config(bg="gray", state=DISABLED)
 
     def basket_select(self, val):
         sender = val.widget
         idx = sender.curselection()
-        print("basket", idx)
-        self.selected_item = self.basket_control[(idx[0])]
-        print(self.selected_item)
+        self.selected_item = None
+        self.selected_quantity = None  # TO BE ADDED
 
+        # check if listbox is contains elements
+        if idx:
+            self.selected_item = self.basket_control[(idx[0])]
+            self.remove_button.config(bg="red", state=NORMAL)
+            self.add_button.config(bg="gray", state=DISABLED)
+            print(self.selected_item)
+
+    # Call Basket() method, reset list, refresh gui
     def remove(self):
-        basket.remove_item(self.selected_item)
-        self.basket_control = []
+        transaction.remove_from_basket(self.selected_item)
         self.refresh_gui()
 
+    # Call Basket() method, reset list, refresh gui
     def add(self):
-        basket.remove_item(self.selected_item)
-        self.basket_control = []
+        transaction.add_to_basket(self.selected_item)
         self.refresh_gui()
 
     def refresh_gui(self):
@@ -211,12 +252,13 @@ class SalesGUI:
         self.items_lb.delete(0, END)
         self.stock_listbox(stock.stock_dict)
 
-        self.var.set(f'Basket value: £{basket.value}')
+        self.text_basket_total.set(f'Basket value: £{basket.value:.2f}')
 
 
 user = User("Basil Fawlty", 1087.65)  # Hardcoded values as per project's spec
 stock = Stock()
 basket = Basket()
+transaction = Transaction()
 
 basket.add_item("Bed", 1)
 basket.add_item("Bed", 1)
@@ -226,8 +268,8 @@ stock.remove("Bed", 1)
 stock.remove("Chest of Drawers", 1)
 
 root = tk.Tk()
-my_gui = SalesGUI(root)
+gui = SalesGUI(root)
 root.mainloop()
+
 # while True:
 #     root.update()
-
