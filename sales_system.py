@@ -4,7 +4,7 @@ The company only has one customer.
 """
 import json
 import tkinter as tk
-from tkinter import messagebox, filedialog, END, StringVar, DISABLED, NORMAL, ACTIVE  # messagebox needs to be imported separately
+from tkinter import messagebox, END, StringVar, DISABLED, NORMAL, ACTIVE  # messagebox needs to be imported separately
 
 
 class Item:
@@ -84,11 +84,14 @@ class Transaction:
             stock.remove(item_name, 1)
 
     def remove_from_basket(self, item_name, quantity):
-        basket.remove_item(item_name)
         stock.add(item_name, quantity)
+        basket.remove_item(item_name)
 
     def in_stock(self, item_name):
         return stock.stock_dict[item_name]["quantity"] > 0
+
+    def stop_adding_to_basket_when_no_money(self):
+        pass
 
 
 class SalesGUI:
@@ -96,7 +99,7 @@ class SalesGUI:
         self.master = master
         master.title("Sales System")
         master.resizable(False, False)
-        master.option_add("*Font", "consolas")
+        master.option_add("*Font", "consolas 12")
 
         window_size = "800x375"
         window_xpos = int(root.winfo_screenwidth()/2 - 2 * root.winfo_reqwidth())
@@ -172,8 +175,8 @@ class SalesGUI:
 
         for item in items_dict:
             text_item = f'{item:16}'
-            text_price = f'Price: £{items_dict[item]["price"]:<6}'
-            text_qty = f'Available: {items_dict[item]["quantity"]}'
+            text_price = f'Price: £{items_dict[item]["price"]:<6.2f}'
+            text_qty = f'Available: {items_dict[item]["quantity"]:>2}'
             self.items_lb.insert(END, f'{text_item} | {text_price} | {text_qty}')
             self.stock_control.append(item)
             if items_dict[item]["quantity"] == 0:
@@ -191,7 +194,7 @@ class SalesGUI:
 
             text_item = f'{item[:11]:11}'
             text_price = f'£{basket_list[item][0]:.2f}'
-            text_qty = f'{basket_list[item][1]}'
+            text_qty = f'{basket_list[item][1]:>2}'
             self.basket_lb.insert(END, f'{text_item} | {text_price:<8} | {text_qty}')
 
             self.basket_control.append(item)
@@ -237,7 +240,7 @@ class SalesGUI:
 
     # Call Basket() method, reset list, refresh gui
     def remove(self):
-        transaction.remove_from_basket(self.selected_item)
+        transaction.remove_from_basket(self.selected_item, 1)
         self.refresh_gui()
 
     # Call Basket() method, reset list, refresh gui
