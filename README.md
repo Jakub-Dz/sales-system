@@ -44,5 +44,5 @@ Assumptions:
 
 | Classes | Methods | Description |
 | :--- |:---|:---|
-| Stock | Init | Load stock as a dict from .json |
-|  | Add | Return items to stock after removing them from the basket |
+| Stock | Init <br> Add <br> Remove | Load stock as a dict from .json |
+| Basket | Add | Adds items from stock to basket instance |
