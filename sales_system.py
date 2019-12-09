@@ -152,6 +152,10 @@ class SalesGUI:
         self.add_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.add_button.place(x=135, y=320)
 
+        self.help_button = tk.Button(master, text="Help", command=self.help)
+        self.help_button.config(width=5, height=1, bg="gold", font="consolas 12")
+        self.help_button.place(x=40, y=320)
+
         # GUI List boxes & declare control variables
         self.stock_idx = None
         self.stock_selected_item = None
@@ -283,6 +287,9 @@ class SalesGUI:
             self.basket_total_label.config(fg="red")
         else:
             self.basket_total_label.config(fg="black")
+
+    def help(self):
+        tk.messagebox.showinfo("Help", "Instructions")
 
 
 #  Main classes init and GUI loop
