@@ -7,14 +7,6 @@ import tkinter as tk
 from tkinter import messagebox, END, StringVar, DISABLED, NORMAL, ACTIVE  # messagebox needs to be imported separately
 
 
-class Item:
-
-    def __init__(self, name, price, quantity):
-        self.name = name
-        self.price = price
-        self.quantity = quantity
-
-
 class Stock:
 
     def __init__(self):
@@ -27,6 +19,7 @@ class Stock:
     def add(self, item_name, quantity):
         self.stock_dict[item_name]["quantity"] += quantity
 
+    # Not accessible from the GUI
     def save(self):
         with open("stock_new.json", "w") as stock_file:
             json.dump(self.stock_dict, stock_file, indent=3)
@@ -61,10 +54,18 @@ class Basket:
 
         self.value += quantity * stock.stock_dict[item_name]["price"]
 
-    # Removing item by type completely, in-basket quantity edits not implemented
-    def remove_item(self, item_name):
-        self.value -= self.items[item_name][0]
-        del self.items[item_name]
+    # Removing items one by one, in-basket quantity edits not implemented
+    def remove_item(self, item_name, quantity):
+
+        self.value -= quantity * stock.stock_dict[item_name]["price"]
+        new_quantity = self.items[item_name][1] - quantity
+        if new_quantity == 0:
+            del self.items[item_name]
+        else:
+            self.items[item_name] = (new_quantity * stock.stock_dict[item_name]["price"], new_quantity)
+
+    def is_item_in_basket(self, item_name):
+        return item_name in self.items
 
 
 class Transaction:
@@ -84,14 +85,19 @@ class Transaction:
             stock.remove(item_name, 1)
 
     def remove_from_basket(self, item_name, quantity):
-        stock.add(item_name, quantity)
-        basket.remove_item(item_name)
+        if basket.is_item_in_basket(item_name):
+            basket.remove_item(item_name, quantity)
+            stock.add(item_name, quantity)
 
     def in_stock(self, item_name):
         return stock.stock_dict[item_name]["quantity"] > 0
 
-    def stop_adding_to_basket_when_no_money(self):
+    def enough_balance(self):
         pass
+        # basket.value
+
+    def checkout(self):
+
 
 
 class SalesGUI:
@@ -197,7 +203,7 @@ class SalesGUI:
             text_qty = f'{basket_list[item][1]:>2}'
             self.basket_lb.insert(END, f'{text_item} | {text_price:<8} | {text_qty}')
 
-            self.basket_control.append(item)
+            self.basket_control.append((item, basket_list[item][1]))
             print(self.basket_control)
             print(item)
 
@@ -217,9 +223,9 @@ class SalesGUI:
 
         # check if listbox is contains elements
         if idx:
-            self.selected_item = self.stock_control[(idx[0])]
             self.remove_button.config(bg="gray", state=DISABLED)
             self.add_button.config(bg="palegreen", state=NORMAL)
+            self.selected_item = self.stock_control[(idx[0])]
             print(self.selected_item)
 
             if not transaction.in_stock(self.selected_item):
@@ -229,21 +235,20 @@ class SalesGUI:
         sender = val.widget
         idx = sender.curselection()
         self.selected_item = None
-        self.selected_quantity = None  # TO BE ADDED
 
         # check if listbox is contains elements
         if idx:
             self.selected_item = self.basket_control[(idx[0])]
             self.remove_button.config(bg="red", state=NORMAL)
             self.add_button.config(bg="gray", state=DISABLED)
-            print(self.selected_item)
+            print("Selected item:", self.selected_item)
 
-    # Call Basket() method, reset list, refresh gui
+    # Call transaction, reset list, refresh gui
     def remove(self):
-        transaction.remove_from_basket(self.selected_item, 1)
+        transaction.remove_from_basket(self.selected_item[0], 1)
         self.refresh_gui()
 
-    # Call Basket() method, reset list, refresh gui
+    # Call transaction method, reset list, refresh gui
     def add(self):
         transaction.add_to_basket(self.selected_item)
         self.refresh_gui()
@@ -263,16 +268,7 @@ stock = Stock()
 basket = Basket()
 transaction = Transaction()
 
-basket.add_item("Bed", 1)
-basket.add_item("Bed", 1)
-basket.add_item("Chest of Drawers", 1)
-basket.add_item("Chest of Drawers", 1)
-stock.remove("Bed", 1)
-stock.remove("Chest of Drawers", 1)
-
 root = tk.Tk()
 gui = SalesGUI(root)
 root.mainloop()
 
-# while True:
-#     root.update()
