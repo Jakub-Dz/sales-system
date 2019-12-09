@@ -9,6 +9,7 @@ import webbrowser
 from tkinter import messagebox, END, StringVar, DISABLED, NORMAL
 
 
+# Stock class -> Loading initial stock from .json file
 class Stock:
 
     def __init__(self):
@@ -22,6 +23,7 @@ class Stock:
         self.stock_dict[item_name]["quantity"] += quantity
 
 
+# User controls only static input for user name and initial balance
 class User:
 
     def __init__(self, name, wallet):
@@ -35,6 +37,7 @@ class User:
         self.wallet -= checkout_cost
 
 
+# Basket controls adding/removing + final checkout receipt
 class Basket:
 
     def __init__(self, value=0):
@@ -77,6 +80,7 @@ class Basket:
         webbrowser.open(f"{time}.txt")
 
 
+# Transaction class acts as a static container: GUI <-> Transaction <-> main Classes
 class Transaction:
 
     def __init__(self):
@@ -109,9 +113,10 @@ class SalesGUI:
     def __init__(self, master):
         self.master = master
         master.title("Sales System")
-        master.resizable(False, False)
-        master.option_add("*Font", "consolas 12")
+        master.resizable(False, False)  # disable resizing
+        master.option_add("*Font", "consolas 12")  # set font to consolas for even characters width
 
+        # draw GUI at the centre of the screen
         window_size = "800x375"
         window_xpos = int(root.winfo_screenwidth()/2 - 2 * root.winfo_reqwidth())
         window_ypos = int(root.winfo_screenheight()/2 - root.winfo_reqheight())
@@ -134,7 +139,7 @@ class SalesGUI:
         self.basket_total_label = tk.Label(master, textvariable=self.text_basket_total)
         self.basket_total_label.place(x=535, y=285)
 
-        # GUI Buttons
+        # GUI Buttons initial state
         self.remove_button = tk.Button(master, text="Remove Item", command=self.remove)
         self.remove_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.remove_button.place(x=520, y=320)
@@ -147,25 +152,21 @@ class SalesGUI:
         self.add_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.add_button.place(x=135, y=320)
 
-        # GUI List boxes
-        self.selected_item = None
-
+        # GUI List boxes & declare control variables
+        self.stock_idx = None
+        self.stock_selected_item = None
         self.stock_control = []  # To access key/index for dict/list
         self.items_lb = None
         self.stock_listbox(stock.stock_dict)
 
+        self.basket_idx = None
+        self.basket_selected_item = None
         self.basket_control = []  # To access key/index for dict/list
         self.basket_lb = None
         self.basket_listbox(basket.items)
 
         self.user_lb = None
         self.user_listbox(user.name, user.wallet)
-
-    def greet(self):
-        print("Greetings!")
-
-    def test(self):
-        tk.messagebox.showinfo("Test", "Test2")
 
     def user_listbox(self, name, wallet):
         self.user_lb = tk.Listbox(self.master)
@@ -182,7 +183,8 @@ class SalesGUI:
 
         for item in items_dict:
             text_item = f'{item:16}'
-            text_price = f'Price: £{items_dict[item]["price"]:<6.2f}'
+            price = f'£{items_dict[item]["price"]:.2f}'
+            text_price = f'Price: {price:>7}'
             text_qty = f'Available: {items_dict[item]["quantity"]:>2}'
             self.items_lb.insert(END, f'{text_item} | {text_price} | {text_qty}')
             self.stock_control.append(item)
@@ -198,17 +200,17 @@ class SalesGUI:
         self.basket_control = []
 
         for item in basket_list:
-
             text_item = f'{item[:11]:11}'
             text_price = f'£{basket_list[item][0]:.2f}'
             text_qty = f'{basket_list[item][1]:>2}'
-            self.basket_lb.insert(END, f'{text_item} | {text_price:<8} | {text_qty}')
+            self.basket_lb.insert(END, f'{text_item} | {text_price:>8} | {text_qty}')
             self.basket_control.append((item, basket_list[item][1]))
 
         self.basket_lb.bind("<<ListboxSelect>>", self.basket_select)
         self.basket_lb.config(width=27)
         self.basket_lb.place(x=520, y=80)
 
+        # checkout disable when basket empty
         if self.basket_control:
             self.checkout_button.config(width=25, height=1, bg="lightblue", state=NORMAL)
         else:
@@ -216,38 +218,49 @@ class SalesGUI:
 
     def stock_select(self, val):
         sender = val.widget
-        idx = sender.curselection()
-        self.selected_item = None
+        self.stock_idx = sender.curselection()
+        self.stock_selected_item = None
 
         # check if listbox is contains elements
-        if idx:
+        if self.stock_idx:
             self.remove_button.config(bg="gray", state=DISABLED)
             self.add_button.config(bg="palegreen", state=NORMAL)
-            self.selected_item = self.stock_control[(idx[0])]
+            self.stock_selected_item = self.stock_control[(self.stock_idx[0])]
 
-            if not transaction.in_stock(self.selected_item):
+            if not transaction.in_stock(self.stock_selected_item):
                 self.add_button.config(bg="gray", state=DISABLED)
 
     def basket_select(self, val):
         sender = val.widget
-        idx = sender.curselection()
-        self.selected_item = None
+        self.basket_idx = sender.curselection()
+        self.basket_selected_item = None
 
-        # check if listbox is contains elements
-        if idx:
-            self.selected_item = self.basket_control[(idx[0])]
+        # check if listbox contains elements
+        if self.basket_idx:
+            self.basket_selected_item = self.basket_control[(self.basket_idx[0])]
             self.remove_button.config(bg="red", state=NORMAL)
             self.add_button.config(bg="gray", state=DISABLED)
 
-    # Call transaction, reset list, refresh gui
+    # Remove from basket via Transaction, reload widgets, re-select previously added item
     def remove(self):
-        transaction.remove_from_basket(self.selected_item[0], 1)
+        transaction.remove_from_basket(self.basket_selected_item[0], 1)
         self.refresh_gui()
 
-    # Call transaction method, reset list, refresh gui
+        # Disable button if basket empty
+        if basket.items:
+            self.remove_button.config(bg="red", state=NORMAL)
+        else:
+            self.remove_button.config(bg="gray", state=DISABLED)
+
+        # Don't select if item no longer exists
+        if self.basket_selected_item[0] in basket.items:
+            self.basket_lb.selection_set(self.basket_idx)
+
+    # Add to basket via Transaction, reload widgets, re-select previously added item
     def add(self):
-        transaction.add_to_basket(self.selected_item)
+        transaction.add_to_basket(self.stock_selected_item)
         self.refresh_gui()
+        self.items_lb.selection_set(self.stock_idx)
 
     def checkout(self):
         transaction.checkout()
@@ -265,6 +278,7 @@ class SalesGUI:
 
         self.text_basket_total.set(f'Basket value: £{basket.value:.2f}')
 
+        # Check basket total vs wallet
         if basket.value > user.wallet:
             self.basket_total_label.config(fg="red")
         else:
@@ -277,6 +291,7 @@ stock = Stock()
 basket = Basket()
 transaction = Transaction()
 
+# GUI main loop
 root = tk.Tk()
 gui = SalesGUI(root)
 root.mainloop()
