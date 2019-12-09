@@ -1,6 +1,5 @@
 
 # 1. First task: Sales System Project
-_Test Project, can be built in any language (.NET preferred)._
 
 :hammer: Link to the main Python file: **[sales_system.py](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.py)**
 
