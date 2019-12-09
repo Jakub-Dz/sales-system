@@ -4,7 +4,9 @@ The company only has one customer.
 """
 import json
 import tkinter as tk
-from tkinter import messagebox, END, StringVar, DISABLED, NORMAL, ACTIVE  # messagebox needs to be imported separately
+import datetime
+import webbrowser
+from tkinter import messagebox, END, StringVar, DISABLED, NORMAL
 
 
 class Stock:
@@ -18,11 +20,6 @@ class Stock:
 
     def add(self, item_name, quantity):
         self.stock_dict[item_name]["quantity"] += quantity
-
-    # Not accessible from the GUI
-    def save(self):
-        with open("stock_new.json", "w") as stock_file:
-            json.dump(self.stock_dict, stock_file, indent=3)
 
 
 class User:
@@ -64,20 +61,26 @@ class Basket:
         else:
             self.items[item_name] = (new_quantity * stock.stock_dict[item_name]["price"], new_quantity)
 
+        if not self.items:
+            self.value = 0
+
     def is_item_in_basket(self, item_name):
         return item_name in self.items
+
+    def save_rec(self):
+        time = str(datetime.datetime.now())
+        time = time.replace(":", "-")
+        with open(f"{time}.txt", "w") as basket_file:
+            basket_file.write(f"On {datetime.date.today()}, {user.name} spent {basket.value} GBP to purchase:\n")
+            for item in self.items:
+                basket_file.write(f"Item name: {item} | Quantity: {self.items[item][1]}\n")
+        webbrowser.open(f"{time}.txt")
 
 
 class Transaction:
 
     def __init__(self):
         pass
-        self.user = user
-
-    def user_details(self):
-        pass
-        # return self.user.user_name, self.user.wallet
-    # if self.stock_dict[item_name]["quantity"] - quantity >= 0:
 
     def add_to_basket(self, item_name):
         if self.in_stock(item_name):
@@ -92,12 +95,14 @@ class Transaction:
     def in_stock(self, item_name):
         return stock.stock_dict[item_name]["quantity"] > 0
 
-    def enough_balance(self):
-        pass
-        # basket.value
-
     def checkout(self):
-
+        if user.check_balance(basket.value):
+            user.update_wallet(basket.value)
+            basket.save_rec()
+            basket.items.clear()
+            basket.value = 0
+        else:
+            tk.messagebox.showinfo("Funds warning", "You don't have enough money")
 
 
 class SalesGUI:
@@ -125,7 +130,7 @@ class SalesGUI:
         self.basket_top_label.place(x=580, y=55)
 
         self.text_basket_total = StringVar()
-        self.text_basket_total.set(f'Basket value: £{basket.value}')
+        self.text_basket_total.set(f'Basket value: £{basket.value:.2f}')
         self.basket_total_label = tk.Label(master, textvariable=self.text_basket_total)
         self.basket_total_label.place(x=535, y=285)
 
@@ -134,7 +139,7 @@ class SalesGUI:
         self.remove_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.remove_button.place(x=520, y=320)
 
-        self.checkout_button = tk.Button(master, text="CHECKOUT", command=self.test)
+        self.checkout_button = tk.Button(master, text="CHECKOUT", command=self.checkout)
         self.checkout_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.checkout_button.place(x=520, y=15)
 
@@ -156,10 +161,6 @@ class SalesGUI:
         self.user_lb = None
         self.user_listbox(user.name, user.wallet)
 
-        #  listbox https://stackoverflow.com/questions/15672552/python-tkinter-listbox-get-active-method
-        #  http://zetcode.com/tkinter/widgets/
-        #  https://stackoverflow.com/questions/34276663/tkinter-gui-layout-using-frames-and-grid
-
     def greet(self):
         print("Greetings!")
 
@@ -168,7 +169,7 @@ class SalesGUI:
 
     def user_listbox(self, name, wallet):
         self.user_lb = tk.Listbox(self.master)
-        self.user_lb.insert(END, f'Name: {name}  |  Funds available: £{wallet}')
+        self.user_lb.insert(END, f'Name: {name}  |  Funds available: £{wallet:.2f}')
 
         self.user_lb.config(width=49, height=1)
         self.user_lb.place(x=40, y=25)
@@ -202,10 +203,7 @@ class SalesGUI:
             text_price = f'£{basket_list[item][0]:.2f}'
             text_qty = f'{basket_list[item][1]:>2}'
             self.basket_lb.insert(END, f'{text_item} | {text_price:<8} | {text_qty}')
-
             self.basket_control.append((item, basket_list[item][1]))
-            print(self.basket_control)
-            print(item)
 
         self.basket_lb.bind("<<ListboxSelect>>", self.basket_select)
         self.basket_lb.config(width=27)
@@ -226,7 +224,6 @@ class SalesGUI:
             self.remove_button.config(bg="gray", state=DISABLED)
             self.add_button.config(bg="palegreen", state=NORMAL)
             self.selected_item = self.stock_control[(idx[0])]
-            print(self.selected_item)
 
             if not transaction.in_stock(self.selected_item):
                 self.add_button.config(bg="gray", state=DISABLED)
@@ -241,7 +238,6 @@ class SalesGUI:
             self.selected_item = self.basket_control[(idx[0])]
             self.remove_button.config(bg="red", state=NORMAL)
             self.add_button.config(bg="gray", state=DISABLED)
-            print("Selected item:", self.selected_item)
 
     # Call transaction, reset list, refresh gui
     def remove(self):
@@ -253,6 +249,10 @@ class SalesGUI:
         transaction.add_to_basket(self.selected_item)
         self.refresh_gui()
 
+    def checkout(self):
+        transaction.checkout()
+        self.refresh_gui()
+
     def refresh_gui(self):
         self.basket_lb.delete(0, END)
         self.basket_listbox(basket.items)
@@ -260,10 +260,19 @@ class SalesGUI:
         self.items_lb.delete(0, END)
         self.stock_listbox(stock.stock_dict)
 
+        self.user_lb.delete(0, END)
+        self.user_listbox(user.name, user.wallet)
+
         self.text_basket_total.set(f'Basket value: £{basket.value:.2f}')
 
+        if basket.value > user.wallet:
+            self.basket_total_label.config(fg="red")
+        else:
+            self.basket_total_label.config(fg="black")
 
-user = User("Basil Fawlty", 1087.65)  # Hardcoded values as per project's spec
+
+#  Main classes init and GUI loop
+user = User("Basil Fawlty", 1087.65)  # Hardcoded values as per project's specs
 stock = Stock()
 basket = Basket()
 transaction = Transaction()
@@ -271,4 +280,3 @@ transaction = Transaction()
 root = tk.Tk()
 gui = SalesGUI(root)
 root.mainloop()
-
