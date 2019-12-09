@@ -1,10 +1,9 @@
 
 # 1. First task: Sales System Project
-_Test Project, can be built in any language (.NET preferred)._
 
-Link to the main Python file: **[sales_system.py](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.py)**
+:hammer: Link to the main Python file: **[sales_system.py](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.py)**
 
-GUI mock-up: **[WireFrame Online](https://wireframepro.mockflow.com/view/Mb007c13b48670f65df9aca01fa0e4e411575378753417)**
+:calling: Link to the compiled version (use sales_system.exe after unpacking): **[sales_system.zip](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.zip)**
 
 Trello board: https://trello.com/b/rt5U3gq3/sales-system
 
