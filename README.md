@@ -42,6 +42,8 @@ Assumptions:
 | :--- |:---|
 | Attempt OOP & interactions via Transaction class | tkinter simple GUI, based on **[this sketch](https://wireframepro.mockflow.com/view/Mb007c13b48670f65df9aca01fa0e4e411575378753417)** |
 
+Execution:
+
 | Classes | Methods | Description |
 | :--- |:---|:---|
 | Stock | Init <br> Add <br> Remove | Load stock as a dict from .json <br> Return items from Basket to Stock <br> Remove items from stock when adding to basket |
