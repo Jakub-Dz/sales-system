@@ -35,6 +35,14 @@ ___
 **Note: This sales system is for customer use, not company use.**
 
 ## 1.2 First Task Implementation
+
+Assumptions:
+
 | Core functionality | GUI |
 | :--- |:---|
-| Classes and interactions via terminal | tkinter simple GUI, based on **[this sketch](https://wireframepro.mockflow.com/view/Mb007c13b48670f65df9aca01fa0e4e411575378753417)** |
+| Attempt OOP & interactions via Transaction class | tkinter simple GUI, based on **[this sketch](https://wireframepro.mockflow.com/view/Mb007c13b48670f65df9aca01fa0e4e411575378753417)** |
+
+| Classes | Methods | Description |
+| :--- |:---|:---|
+| Stock | Init | Load stock as a dict from .json |
+|  | Add | Return items to stock after removing them from the basket |
