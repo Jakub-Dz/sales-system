@@ -33,7 +33,7 @@ ___
 - [x] Inventory from .json
 
 **Improvement for the next revision:**
-- [ ] Store prices as integers instead of floats
+- [ ] Store prices as integers instead of floats (GBX instead of GBP)
 - [ ] Make GUI resizable, use grid & sticky property
 - [ ] ...
 
