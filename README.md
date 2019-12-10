@@ -49,7 +49,10 @@ Assumptions:
 
 Execution:
 
-| Classes | Methods | Description |
-| :--- |:---|:---|
-| Stock | Init <br> Add <br> Remove | Load stock as a dict from .json <br> Return items from Basket to Stock <br> Remove items from stock when adding to basket |
-| Basket | Add | Adds items from stock to basket instance |
+| Classes | Description |
+| :--- |:---|
+| Stock | Load stock as a dict from .json <br> Return items from Basket to Stock <br> Remove items from stock when adding to basket |
+| User | User name and wallet / account balance -> checking and updating |
+| Basket | Adds items from stock to basket<br> Removes items <br> Saves receipt as .txt  |
+| Transaction | Handles most of the communication between GUI and Basket/User/Stock |
+| SalesGUI | Tkinter GUI - labels, buttons, listboxes, ACTIVE/DISABLED state checks for buttons |
