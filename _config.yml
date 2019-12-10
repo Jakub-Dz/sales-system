@@ -1,6 +1,6 @@
 title: Sales System
 logo: gui-tk.JPG
-description:  Sales System - built in Python. <br> <br>Instructions:<br><br>1. Select an item from the Furniture Catalogue<br><br>2. Click <Add to basket> button to add 1 item to the basket<br><br>3. To remove 1 item from the basket, select and click <Remove item> <br><br>4. Once there's at least 1 item in the Basket, <CHECKOUT> becomes available<br><br>5. To checkout you need to have enough money in the 'wallet'<br>6. Receipt appears after checkout and automatically saved in the main folder")<br><br> 
+description:  Sales System - built in Python. <br> <br>Instructions:<br><br>1. Select an item from the Furniture Catalogue<br><br>2. Click <Add to basket> button to add 1 item to the basket<br><br>3. To remove 1 item from the basket, select and click <Remove item> <br><br>4. Once there's at least 1 item in the Basket, <CHECKOUT> becomes available<br><br>5. To checkout you need to have enough money in the 'wallet'<br><br>6. Receipt appears after checkout and automatically saved in the main folder")<br><br> 
 show_downloads: false
 google_analytics:
 theme: jekyll-theme-minimal
