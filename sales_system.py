@@ -118,7 +118,7 @@ class SalesGUI:
         self.master = master
         master.title("Sales System")
         master.resizable(False, False)  # disable resizing
-        master.option_add("*Font", "consolas 12")  # set font to consolas for even characters width
+        master.option_add("*Font", "consolas")  # set font to consolas for even characters width
 
         # draw GUI at the centre of the screen
         window_size = "800x375"
@@ -157,7 +157,7 @@ class SalesGUI:
         self.add_button.place(x=135, y=320)
 
         self.help_button = tk.Button(master, text="Help", command=self.help)
-        self.help_button.config(width=5, height=1, bg="gold", font="consolas 12")
+        self.help_button.config(width=5, height=1, bg="gold")
         self.help_button.place(x=40, y=320)
 
         # GUI List boxes & declare control variables
