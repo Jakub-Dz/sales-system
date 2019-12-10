@@ -5,8 +5,6 @@
 
 :calling: Link to the compiled version (use sales_system.exe after unpacking): **[sales_system.zip](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.zip)**
 
-Trello board: https://trello.com/b/rt5U3gq3/sales-system
-
 
 # 2. Second task: Match Point Assets
 _Two data sets provided, the output is expected to be a list of Set1 UID alongside the corresponding UID from Set2._
