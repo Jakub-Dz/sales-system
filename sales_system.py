@@ -78,7 +78,7 @@ class Basket:
         time = str(datetime.datetime.now())
         time = time.replace(":", "-")
         with open(f"{time}.txt", "w") as basket_file:
-            basket_file.write(f"On {datetime.date.today()}, {user.name} spent {basket.value} GBP to purchase:\n")
+            basket_file.write(f"On {datetime.date.today()}, {user.name} spent {basket.value:.2f} GBP to purchase:\n")
             for item in self.items:
                 basket_file.write(f"Item name: {item} | Quantity: {self.items[item][1]}\n")
         webbrowser.open(f"{time}.txt")
