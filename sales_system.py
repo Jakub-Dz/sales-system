@@ -1,6 +1,10 @@
 """Sales System Project
-This sales system is for customer use, not company use.
-The company only has one customer.
+This sales system is for customer use, not company use. The company only has one customer.
+
+Notes:
+1. Stock to be read from the *.json file as a dictionary
+2. User details are hardcoded, but can be opened for input if needed
+3. Ideally GUI would access data only through Transaction class, but that would require additional work
 """
 import json
 import tkinter as tk
@@ -140,7 +144,7 @@ class SalesGUI:
         self.basket_total_label.place(x=535, y=285)
 
         # GUI Buttons initial state
-        self.remove_button = tk.Button(master, text="Remove Item", command=self.remove)
+        self.remove_button = tk.Button(master, text="Remove item", command=self.remove)
         self.remove_button.config(width=26, height=1, bg="gray", state=DISABLED)
         self.remove_button.place(x=520, y=320)
 
@@ -289,7 +293,13 @@ class SalesGUI:
             self.basket_total_label.config(fg="black")
 
     def help(self):
-        tk.messagebox.showinfo("Help", "Instructions")
+        tk.messagebox.showinfo("Help", "Instructions:\n\n"
+                                       "1. Select an item from the Furniture Catalogue\n\n"
+                                       "2. Click <Add to basket> button to add 1 item to the basket\n\n"
+                                       "3. To remove 1 item from the basket, select and click <Remove item>\n\n"
+                                       "4. Once there's at least 1 item in the Basket, <CHECKOUT> becomes available\n\n"
+                                       "5. To checkout you need to have enough money in the 'wallet'\n\n"
+                                       "6. Receipt appears after checkout and automatically saved in the main folder")
 
 
 #  Main classes init and GUI loop
