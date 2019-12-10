@@ -39,6 +39,8 @@ ___
 
 **Note: This sales system is for customer use, not company use.**
 
+***
+
 ## 1.2 First Task Implementation
 
 Assumptions:
@@ -56,3 +58,4 @@ Execution:
 | Basket | Adds items from stock to basket<br> Removes items <br> Saves receipt as .txt  |
 | Transaction | Handles most of the communication between GUI and Basket/User/Stock |
 | SalesGUI | Tkinter GUI - labels, buttons, listboxes, ACTIVE/DISABLED state checks for buttons |
+
