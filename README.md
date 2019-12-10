@@ -31,6 +31,16 @@ ___
 - [x] Update the inventory
 - [x] Update the customer’s balance
 
+**Additional features:**
+- [x] Basket
+- [x] Saving receipts
+- [x] Inventory from .json
+
+**Improvement for the next revision:**
+- [ ] Store prices as integers instead of floats
+- [ ] Make GUI resizable, use grid & sticky property
+- [ ] ...
+
 **Note: This sales system is for customer use, not company use.**
 
 ## 1.2 First Task Implementation
