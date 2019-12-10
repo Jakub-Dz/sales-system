@@ -1,6 +1,6 @@
 theme: jekyll-theme-minimal
 <img src="gui-tk.JPG" alt="hi" class="inline"/>
 title: [The title of your site]
-description: [A short description of your site's purpose]
-logo: gui-tk.JPG
+description: "[A short description of your site's purpose]"
+logo: "gui-tk.JPG"
 show_downloads: true
