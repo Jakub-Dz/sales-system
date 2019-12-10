@@ -1,6 +1,6 @@
-theme: jekyll-theme-minimal
-<img src="gui-tk.JPG" alt="hi" class="inline"/>
-title: [The title of your site]
-description: "[A short description of your site's purpose]"
-logo: "gui-tk.JPG"
+title: Sales System project - built in Python
+logo: /gui-tk.JPG
+description: Sales System for the furniture company. This sales system is for customer use, not company use. For the purposes of this project, the company only has one customer.
 show_downloads: true
+google_analytics:
+theme: jekyll-theme-minimal
