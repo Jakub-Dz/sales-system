@@ -7,9 +7,6 @@
 
 
 # 2. Second task: Match Point Assets
-_Two data sets provided, the output is expected to be a list of Set1 UID alongside the corresponding UID from Set2._
-
-_The problem should be carried out using VBA or a similar programming language._
 
 Macro-enabled spreadsheet can be downloaded from here: **[Problem2.xlsm](https://github.com/Jakub-Dz/sales-system/blob/master/Problem2.xlsm)**
 
