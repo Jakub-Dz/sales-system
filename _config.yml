@@ -1,6 +1,6 @@
 title: Sales System
 logo: gui-tk.JPG
-description:  Sales System - built in Python. <br> <br>Instructions:<br><br>1. Select an item from the stock<br><br>2. Click <Add to basket> to add 1 item to the basket <br><br> Select and click <Remove item> to remove from the basket <br><br>4. You can <CHECKOUT> if basket is not empty <br><br> 5. You need enough money in the 'wallet' to complete checkout <br><br> 6. Receipt appears after checkout and is saved in the main folder 
+description:  Sales System - built in Python. <br> <br>Instructions:<br><br>1. Select an item from the stock <br><br> 2. Click <Add to basket> to add 1 item to the basket <br><br> 3. Select and click <Remove item> to remove from the basket <br><br>4. You can <CHECKOUT> if basket is not empty <br><br> 5. You need enough money in the 'wallet' to complete checkout <br><br> 6. Receipt appears after checkout and is saved in the main folder 
 show_downloads: false
 google_analytics:
 theme: jekyll-theme-minimal
