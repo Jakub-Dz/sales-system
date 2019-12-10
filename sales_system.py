@@ -118,7 +118,7 @@ class SalesGUI:
         self.master = master
         master.title("Sales System")
         master.resizable(False, False)  # disable resizing
-        master.option_add("*Font", "consolas")  # set font to consolas for even characters width
+        master.option_add("*Font", "consolas -16")  # set font to consolas for even characters width
 
         # draw GUI at the centre of the screen
         window_size = "800x375"
