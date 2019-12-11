@@ -1,12 +1,23 @@
+# AfterSubmission branch added to improve OOP aspect
 
-# 1. First task: Sales System Project
+- [ ] Class Basket has no access to Stock
+- [ ] All data is passed to GUI via SalesManager class
+- [ ] User, Basket and Stock are initialised in SalesManager
+- [ ] .json file is passed to Stock as the argument
+- [ ] GUI is not reposible for logic, as it shall be handled enitrely by SalesManager
+- [ ] Add if __name__= "__main__": for code execution
+
+---
+---
+
+## 1. First task: Sales System Project
 
 Link to the main Python file: **[sales_system.py](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.py)**
 
 Compiled version (use sales_system.exe after unpacking): **[sales_system.zip](https://github.com/Jakub-Dz/sales-system/blob/master/sales_system.zip)**
 
 
-# 2. Second task: Match Point Assets
+## 2. Second task: Match Point Assets
 
 Macro-enabled spreadsheet can be downloaded from here: **[Problem2.xlsm](https://github.com/Jakub-Dz/sales-system/blob/master/Problem2.xlsm)**
 
@@ -15,7 +26,7 @@ Source code can be viewed here: **[Problem2.bas](https://github.com/Jakub-Dz/sal
 ___
 ***
 
-## 1.1 First Task description
+### 1.1 First Task description
 **The system must:**
 - [x] Keep an inventory of stock items and their cost
 - [x] Allow the customer to view the current quantity and cost of each item 
@@ -39,7 +50,7 @@ ___
 
 **Note: This sales system is for customer use, not company use.**
 
-## 1.2 First Task Implementation
+### 1.2 First Task Implementation
 
 Assumptions:
 
