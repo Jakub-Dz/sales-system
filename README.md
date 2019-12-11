@@ -1,5 +1,11 @@
 # AfterSubmission branch added to improve OOP aspect
 
+- [ ] Class Basket has no access to Stock
+- [ ] All data is passed to GUI via SalesManager class
+- [ ] User, Basket and Stock are initialised in SalesManager
+- [ ] .json file is passed to Stock as the argument
+- [ ] GUI is not reposible for logic, as it shall be handled enitrely by SalesManager
+- [ ] Add if __name__= "__main__": for code execution
 
 ---
 ---
