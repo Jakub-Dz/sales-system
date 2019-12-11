@@ -302,13 +302,13 @@ class SalesGUI:
                                        "6. Receipt appears after checkout and automatically saved in the main folder")
 
 
-#  Main classes init and GUI loop
-user = User("Basil Fawlty", 1087.65)  # Hardcoded values as per project's specs
-stock = Stock()
-basket = Basket()
-transaction = Transaction()
+if __name__ == "__main__":
+    user = User("Basil Fawlty", 1087.65)  # Hardcoded values as per project's specs
+    stock = Stock()
+    basket = Basket()
+    transaction = Transaction()
 
-# GUI main loop
-root = tk.Tk()
-gui = SalesGUI(root)
-root.mainloop()
+    # GUI main loop
+    root = tk.Tk()
+    gui = SalesGUI(root)
+    root.mainloop()
