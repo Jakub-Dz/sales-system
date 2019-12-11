@@ -16,8 +16,8 @@ from tkinter import messagebox, END, StringVar, DISABLED, NORMAL
 # Stock class -> Loading initial stock from .json file
 class Stock:
 
-    def __init__(self):
-        with open("stock.json", "r") as stock_file:
+    def __init__(self, stock_file):
+        with open(stock_file, "r") as stock_file:
             self.stock_dict = json.load(stock_file)
 
     def remove(self, item_name, quantity):
@@ -48,74 +48,99 @@ class Basket:
         self.value = value
         self.items = {}
 
-    def add_item(self, item_name, quantity):
+    def add_item(self, item_name, price, quantity):
         if item_name in self.items:
             new_quantity = self.items[item_name][1] + quantity
         else:
             new_quantity = quantity
 
-        self.items[item_name] = (new_quantity * stock.stock_dict[item_name]["price"], new_quantity)
-
-        self.value += quantity * stock.stock_dict[item_name]["price"]
+        self.items[item_name] = (new_quantity * price, new_quantity)
 
     # Removing items one by one, in-basket quantity edits not implemented
-    def remove_item(self, item_name, quantity):
+    def remove_item(self, item_name, price, quantity):
 
-        self.value -= quantity * stock.stock_dict[item_name]["price"]
         new_quantity = self.items[item_name][1] - quantity
         if new_quantity == 0:
             del self.items[item_name]
         else:
-            self.items[item_name] = (new_quantity * stock.stock_dict[item_name]["price"], new_quantity)
-
-        if not self.items:
-            self.value = 0
+            self.items[item_name] = (new_quantity * price, new_quantity)
 
     def is_item_in_basket(self, item_name):
         return item_name in self.items
 
-    def save_rec(self):
+    def save_rec(self, user_name):
         time = str(datetime.datetime.now())
         time = time.replace(":", "-")
         with open(f"{time}.txt", "w") as basket_file:
-            basket_file.write(f"On {datetime.date.today()}, {user.name} spent {basket.value:.2f} GBP to purchase:\n")
+            basket_file.write(f"On {datetime.date.today()}, {user_name} "
+                              f"spent {self.get_value()/100:.2f} GBP to purchase:\n")
             for item in self.items:
                 basket_file.write(f"Item name: {item} | Quantity: {self.items[item][1]}\n")
         webbrowser.open(f"{time}.txt")
 
+    def get_value(self):
+        value = 0
+        for item_name in self.items:
+            value += self.items[item_name][0]
+
+        return value
 
 # Transaction class acts as a static container: GUI <-> Transaction <-> main Classes
-class Transaction:
+class SalesManager:
 
-    def __init__(self):
-        pass
+    def __init__(self, user_name, user_wallet, stock_file):
+        self.user = User(user_name, user_wallet)
+        self.stock = Stock(stock_file)
+        self.basket = Basket()
+
+    def basket_value(self):
+        return self.basket.value
+    # tak ma byc?
+    self.basket_listbox(self.sales_man.basket_value())
+    # czy moze to jest okej?
+    self.basket_listbox(self.sales_man.basket.value)
+
+
+    def stock_dict(self):
+        return self.stock.stock_dict
+
+    def basket_items(self):
+        return self.basket_items
+
+    def user_name(self):
+        return self.basket_items
+
+    def basket_items(self):
+        return self.basket_items
 
     def add_to_basket(self, item_name):
         if self.in_stock(item_name):
-            basket.add_item(item_name, 1)
-            stock.remove(item_name, 1)
+            self.basket.add_item(item_name, 1)
+            self.stock.remove(item_name, 1)
 
     def remove_from_basket(self, item_name, quantity):
-        if basket.is_item_in_basket(item_name):
-            basket.remove_item(item_name, quantity)
-            stock.add(item_name, quantity)
+        if self.basket.is_item_in_basket(item_name):
+            self.basket.remove_item(item_name, quantity)
+            self.stock.add(item_name, quantity)
 
     def in_stock(self, item_name):
-        return stock.stock_dict[item_name]["quantity"] > 0
+        return self.stock.stock_dict[item_name]["quantity"] > 0
 
     def checkout(self):
-        if user.check_balance(basket.value):
-            user.update_wallet(basket.value)
-            basket.save_rec()
-            basket.items.clear()
-            basket.value = 0
+        if self.user.check_balance(basket.value):
+            self.user.update_wallet(basket.value)
+            self.basket.save_rec()
+            self.basket.items.clear()
+            self.basket.value = 0
         else:
             tk.messagebox.showinfo("Funds warning", "You don't have enough money")
 
 
 class SalesGUI:
-    def __init__(self, master):
+    def __init__(self, master, sales_man):
         self.master = master
+        self.sales_man = sales_man
+
         master.title("Sales System")
         master.resizable(False, False)  # disable resizing
         master.option_add("*Font", "consolas -16")  # set font to consolas for even characters width
@@ -139,7 +164,7 @@ class SalesGUI:
         self.basket_top_label.place(x=580, y=55)
 
         self.text_basket_total = StringVar()
-        self.text_basket_total.set(f'Basket value: £{basket.value:.2f}')
+        self.text_basket_total.set(f'Basket value: £{self.sales_man.basket_value():.2f}')
         self.basket_total_label = tk.Label(master, textvariable=self.text_basket_total)
         self.basket_total_label.place(x=535, y=285)
 
@@ -165,16 +190,16 @@ class SalesGUI:
         self.stock_selected_item = None
         self.stock_control = []  # To access key/index for dict/list
         self.items_lb = None
-        self.stock_listbox(stock.stock_dict)
+        self.stock_listbox(self.sales_man.stock_dict())
 
         self.basket_idx = None
         self.basket_selected_item = None
         self.basket_control = []  # To access key/index for dict/list
         self.basket_lb = None
-        self.basket_listbox(basket.items)
+        self.basket_listbox(self.sales_man.basket_items())
 
         self.user_lb = None
-        self.user_listbox(user.name, user.wallet)
+        self.user_listbox(self.sales_man.user.name, user.wallet)
 
     def user_listbox(self, name, wallet):
         self.user_lb = tk.Listbox(self.master)
@@ -303,12 +328,9 @@ class SalesGUI:
 
 
 if __name__ == "__main__":
-    user = User("Basil Fawlty", 1087.65)  # Hardcoded values as per project's specs
-    stock = Stock()
-    basket = Basket()
-    transaction = Transaction()
+    sales_manager = SalesManager("Basil Fawlty", 1087.65, stock_file="stock.json")
 
     # GUI main loop
     root = tk.Tk()
-    gui = SalesGUI(root)
+    gui = SalesGUI(root, sales_manager)
     root.mainloop()
