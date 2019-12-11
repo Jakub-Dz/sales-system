@@ -1,3 +1,6 @@
+```diff
+- text in red
++ text in green
 
 # 1. First task: Sales System Project
 
